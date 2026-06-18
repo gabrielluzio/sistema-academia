@@ -1,9 +1,9 @@
-from cadastro_aluno import Cadastrar_Aluno
+from cadastro_aluno import CadastrarAluno
 from cadastro_aluno import Planos
 
 
 def main():
-    funcao = Cadastrar_Aluno()
+    funcao = CadastrarAluno()
     funcao.conectar()
 
     while True:
@@ -17,59 +17,59 @@ def main():
         try:
             usuario = int(input('ESCOLHA UMA OPÇÃO: '))
             if usuario < 1 or usuario > 6:
-                print('valor invalido')
+                print('VALOR INVALIDO')
                 continue
 
         except ValueError:
-            print('Digite apenas números.')
+            print('DIGITE APENAS NUMEROS.')
             continue
 
-        if usuario == 1:
-            nome_aluno = str(input('NOME DO ALUNO: ')).strip()
-            if not nome_aluno:
-                print("Nome inválido.")
-                continue
-            plano = str(input('PLANO DO ALUNO: '))
+        match usuario:
+            case 1:
+                nome_aluno = str(input('NOME DO ALUNO: ')).strip()
+                if not nome_aluno:
+                    print("NOME INVALIDO.")
+                    continue
+                plano = str(input('PLANO DO ALUNO: '))
 
-            dias = Planos.dias_planos(plano)
-            data = Cadastrar_Aluno.data_cadastrado()
-            data_vencida = Cadastrar_Aluno.data_vencimento(data, dias)
-            funcao.cadastrar(nome_aluno, dias, data, data_vencida)
+                dias = Planos.dias_planos(plano)
+                data = CadastrarAluno.data_cadastrado()
+                data_vencida = CadastrarAluno.data_vencimento(data, dias)
+                funcao.cadastrar(nome_aluno, dias, data, data_vencida)
 
+            case 2:
+                  nome_aluno = str(input('NOME DO ALUNO: ')).strip()
+                  if not nome_aluno:
+                      print("NOME INVALIDO.")
+                      continue
+                  funcao.ListarAlunos(nome_aluno)
 
-        elif usuario == 2:
-              nome_aluno = str(input('NOME DO ALUNO: ')).strip()
-              if not nome_aluno:
-                  print("Nome inválido.")
-                  continue
-              funcao.ListarAlunos(nome_aluno)
+            case 3:
+                nome_aluno = str(input('NOME DO ALUNO: ')).strip()
+                if not nome_aluno:
+                    print("NOME INVALIDO.")
+                    continue
+                plano = str(input('PLANO DO ALUNO: '))
+                funcao.atualizar_plano(nome_aluno, plano)
 
-        elif usuario == 3:
-            nome_aluno = str(input('NOME DO ALUNO: ')).strip()
-            if not nome_aluno:
-                print("Nome inválido.")
-                continue
-            plano = str(input('PLANO DO ALUNO: '))
-            funcao.atualizar_plano(nome_aluno, plano)
+            case 4:
+                nome_aluno = str(input('NOME DO ALUNO: ')).strip()
+                if not nome_aluno:
+                    print("NOME INVALIDO.")
+                    continue
+                funcao.verificar_vencimento(nome_aluno)
 
-        elif usuario == 4:
-            nome_aluno = str(input('NOME DO ALUNO: ')).strip()
-            if not nome_aluno:
-                print("Nome inválido.")
-                continue
-            funcao.verificar_vencimento(nome_aluno)
+            case 5:
+                nome_aluno = str(input('NOME DO ALUNO: ')).strip()
+                if not nome_aluno:
+                    print("NOME INVALIDO.")
+                    continue
+                funcao.remover_aluno(nome_aluno)
 
-        elif usuario == 5:
-            nome_aluno = str(input('NOME DO ALUNO: ')).strip()
-            if not nome_aluno:
-                print("Nome inválido.")
-                continue
-            funcao.remover_aluno(nome_aluno)
-
-        elif usuario == 6:
-            funcao.fechar_conexao()
-            print("Sistema encerrado.")
-            break
+            case 6:
+                funcao.fechar_conexao()
+                print("SISTEMA ENCERRADO.")
+                break
 if __name__ == '__main__':
     main()
 

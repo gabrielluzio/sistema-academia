@@ -13,7 +13,7 @@ class ConectarBanco:
             self.conexao = mysql.connector.connect(
                 host = "localhost",
                 user = "root",
-                password = "SENHA",
+                password = "Gabrielluzio1@",
                 database = "academia"
             )
             self.cursor = self.conexao.cursor()
@@ -32,15 +32,16 @@ class ConectarBanco:
 class Planos:
     @staticmethod
     def dias_planos(plano):
-        if plano == 'mensal':
-            return 30
-        elif plano == 'trimestral':
-            return 90
-        elif plano == 'anual':
-            return 365
+        match plano:
+            case 'mensal':
+                return 30
+            case 'trimestral':
+                return 90
+            case 'anual':
+                return 365
         return None
 
-class Cadastrar_Aluno(ConectarBanco, Planos):
+class CadastrarAluno(ConectarBanco, Planos):
 
     def cadastrar(self, nome_aluno, plano, data_cadastro, data_vencimento):
         try:
@@ -48,7 +49,6 @@ class Cadastrar_Aluno(ConectarBanco, Planos):
                        'values (%s, %s, %s, %s)')
             self.cursor.execute(comando, (nome_aluno, plano, data_cadastro, data_vencimento))
             self.conexao.commit()
-            print('commit feito')
             print('ALUNO CADASTRADO. ')
 
         except mysql.connector.IntegrityError:
@@ -68,25 +68,26 @@ class Cadastrar_Aluno(ConectarBanco, Planos):
 
     @staticmethod
     def data_vencimento(data_atual, dias_planos):
-        if dias_planos == 30:
-            data_vencida = data_atual + timedelta (days = 30)
-            return data_vencida
-        elif dias_planos == 90:
-            data_vencida = data_atual + timedelta(days=90)
-            return data_vencida
-        elif dias_planos == 365:
-            data_vencida = data_atual + timedelta(days=365)
-            return data_vencida
+        match dias_planos:
+            case 30:
+                data_vencida = data_atual + timedelta (days = 30)
+                return data_vencida
+            case 90:
+                data_vencida = data_atual + timedelta(days=90)
+                return data_vencida
+            case 365:
+                data_vencida = data_atual + timedelta(days=365)
+                return data_vencida
 
     def atualizar_plano(self, nome_aluno, novo_plano):
         try:
             dias = Planos.dias_planos(novo_plano)
 
             if dias is None:
-                print("Plano inválido.")
+                print("PLANO INVALIDO.")
                 return
 
-            data_atual = Cadastrar_Aluno.data_cadastrado()
+            data_atual = CadastrarAluno.data_cadastrado()
             nova_data_vencimento = data_atual + timedelta(days=dias)
 
             comando = 'update cadastro_aluno set plano = %s, data_vencimento = %s where nome_aluno = %s'
@@ -94,12 +95,12 @@ class Cadastrar_Aluno(ConectarBanco, Planos):
             self.conexao.commit()
 
             if self.cursor.rowcount == 0:
-                print("Aluno não encontrado.")
+                print("ALUNO NÃO ENCONTRADO.")
             else:
-                print("Plano atualizado com sucesso!")
+                print("PLANO ATUALIZADO COM SUCESSO.!")
 
         except mysql.connector.Error as erro:
-            print(f"Erro no banco de dados: {erro}")
+            print(f"Erro NO BANCO DE DADOS: {erro}")
 
 
     def remover_aluno(self, nome_aluno):
@@ -109,12 +110,12 @@ class Cadastrar_Aluno(ConectarBanco, Planos):
             self.conexao.commit()
 
             if self.cursor.rowcount == 0:
-                print("Aluno não encontrado.")
+                print("ALUNO NAO ENCONTRADO.")
             else:
-                print("aluno removido com sucesso!")
+                print("ALUNO REMOVIDO COM SUCESSO!")
 
         except mysql.connector.Error as erro:
-            print(f"Erro no banco: {erro}")
+            print(f"Erro NO BANCO DE DADOS: {erro}")
 
     def verificar_vencimento(self, nome_aluno):
         try:
@@ -123,18 +124,18 @@ class Cadastrar_Aluno(ConectarBanco, Planos):
             resultado = self.cursor.fetchone()
 
             if resultado is None:
-                print("Aluno não encontrado.")
+                print("ALUNO NÃO ENCONTRADO.")
                 return
             data_vencimento = resultado[4]
-            print(f"Data de vencimento: {data_vencimento}")
+            print(f"DATA DE VENCIMENTO: {data_vencimento}")
 
-            if datetime.now().date() > data_vencimento:
+            if datetime.now().date() > data_vencimento.date():
                 print("INSCRIÇÃO VENCIDA")
             else:
                 print("INSCRIÇÃO ATIVA")
 
         except mysql.connector.Error as erro:
-            print(f"Erro no banco: {erro}")
+            print(f"Erro NO BANCO DE DADOS: {erro}")
 
 
 
