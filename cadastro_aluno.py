@@ -13,9 +13,9 @@ class ConectarBanco:
             self.conexao = mysql.connector.connect(
                 host = "localhost",
                 user = "root",
-                password = "Gabrielluzio1@",
+                password = "SENHA",
                 database = "academia"
-            )
+
             self.cursor = self.conexao.cursor()
             print('BANCO CONECTADO')
         except mysql.connector.Error as erro:
